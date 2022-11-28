@@ -28,6 +28,14 @@ Future<void> getMusic(String term) async{
     }
   }
   Future<List<Tracks>> getTracks() async{
+    tracksList.add(Tracks(
+      trackName: 'test',
+      trackUrl: 'test',
+      trackImage: 'test',
+      trackArtist: 'test',
+      trackAlbum: 'test',
+      trackDuration: 'test',
+    )); 
     return tracksList;
   }
 }

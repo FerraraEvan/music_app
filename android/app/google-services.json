@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "425581425786",
+    "firebase_url": "https://flutterproject-ae729-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "flutterproject-ae729",
+    "storage_bucket": "flutterproject-ae729.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:425581425786:android:d794bdc7f89300543777c3",
+        "android_client_info": {
+          "package_name": "com.example.music_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "425581425786-guflg3cthfnhtv50bgk4j4auvmc5r797.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIV01lYSYSKpcXkj4_6haPK7kSf7B4YnA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "425581425786-guflg3cthfnhtv50bgk4j4auvmc5r797.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

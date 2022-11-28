@@ -41,13 +41,14 @@ class _SearchMusicViewState extends State<SearchMusicView> {
             Expanded(child: FutureBuilder( //le ptoblème est ici
               future: itunes.getTracks(),
               builder: (context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData) {
+                if (snapshot.data == null) {
                   return ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
                       return ListTile(
                         title: Text(snapshot.data[index].trackName),
                         subtitle: Text(snapshot.data[index].artistName),
+                        trailing: const Icon(Icons.playlist_play),
                       );
                     },
                   );
