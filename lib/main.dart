@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:music_app/firebase/firebase.dart';
 import 'package:music_app/pages/search_page.dart';
 
-
-void main() {
-
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  FireBaseService fireBaseService = FireBaseService();
+  await fireBaseService.initializeApp();
+  fireBaseService.initializeDb();
   runApp(const MyApp());
 }
+
 class MyApp extends StatelessWidget {
   
   const MyApp({super.key});
@@ -13,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Music App',
       theme: ThemeData(
         primarySwatch: Colors.pink,
       ),
@@ -28,9 +32,12 @@ class ConnexionPage extends StatefulWidget {
 
   @override
   State<ConnexionPage> createState() => _ConnexionPageState();
+
+  
 }
 
 class _ConnexionPageState extends State<ConnexionPage> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,18 +67,17 @@ class _ConnexionPageState extends State<ConnexionPage> {
                   border: OutlineInputBorder(),
                   labelText: 'Pseudo',
                 ),
-                onSubmitted: (String value) {
-                  if(value != "") {
-                    Navigator.push(
+                onSubmitted: (String value) async {
+                  if(value != ""){
+                     Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => SearchMusicView(value)),
                     ); 
+                    }
                   }
-                },
               ),
             ),
-          ],
-        ),
+        ]),
       ),
     );
   }
