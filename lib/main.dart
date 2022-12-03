@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:music_app/firebase/firebase.dart';
 import 'package:music_app/pages/search_page.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  FireBaseService fireBaseService = FireBaseService();
-  await fireBaseService.initializeApp();
-  fireBaseService.initializeDb();
   runApp(const MyApp());
+  //FireBaseService fireBaseService = FireBaseService();
+  //fireBaseService.initializeApp();
 }
 
 class MyApp extends StatelessWidget {
@@ -32,12 +31,12 @@ class ConnexionPage extends StatefulWidget {
 
   @override
   State<ConnexionPage> createState() => _ConnexionPageState();
-
   
 }
 
 class _ConnexionPageState extends State<ConnexionPage> {
-
+FireBaseService fireBaseService = FireBaseService();
+    
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,14 +66,14 @@ class _ConnexionPageState extends State<ConnexionPage> {
                   border: OutlineInputBorder(),
                   labelText: 'Pseudo',
                 ),
-                onSubmitted: (String value) async {
+                onSubmitted: (String value) {
                   if(value != ""){
-                     Navigator.push(
+                    Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => SearchMusicView(value)),
                     ); 
-                    }
                   }
+                }
               ),
             ),
         ]),
