@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:music_app/models/itunes.dart';
 import 'package:music_app/pages/placement_page.dart';
+
+import '../models/api.dart';
 
 
 class SearchMusicView extends StatefulWidget {
@@ -11,7 +12,7 @@ class SearchMusicView extends StatefulWidget {
 }
 
 class _SearchMusicViewState extends State<SearchMusicView> {
-  Itunes itunes = Itunes();
+  Api api = Api();
 
   @override
   Widget build(BuildContext context) {
@@ -32,32 +33,31 @@ class _SearchMusicViewState extends State<SearchMusicView> {
                 textAlign: TextAlign.start,
               ),
              TextField(
-              onChanged: (value) => itunes.getMusic(value),
+              onChanged: (value) => api.getMusic(value),
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'Search Music',
               ),
             ),
-            Expanded(child: FutureBuilder( //le ptoblème est ici
-              future: itunes.getTracks(),
-              builder: (context, AsyncSnapshot snapshot) {
-                if (snapshot.data == null) {
+            Expanded(child: FutureBuilder(
+              future: api.getTracks(),
+              builder: (BuildContext context, AsyncSnapshot snapshot){
+                if(snapshot.hasData){
                   return ListView.builder(
                     itemCount: snapshot.data.length,
-                    itemBuilder: (context, index) {
+                    itemBuilder: (BuildContext context, int index){
                       return ListTile(
                         title: Text(snapshot.data[index].trackName),
-                        subtitle: Text(snapshot.data[index].artistName),
-                        trailing: const Icon(Icons.playlist_play),
+                        subtitle: Text(snapshot.data[index].trackArtist),
                       );
                     },
                   );
-                } else {
+                }else{
                   return const Center(child: CircularProgressIndicator());
                 }
               },
             ),
-            ),
+          ),
             Container(
               padding: const EdgeInsets.all(10),
               child: ElevatedButton(onPressed: (){
