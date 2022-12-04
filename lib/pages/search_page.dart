@@ -13,7 +13,7 @@ class SearchMusicView extends StatefulWidget {
 
 class _SearchMusicViewState extends State<SearchMusicView> {
   Api api = Api();
-
+  final List<bool> isSelected = List.generate(20, (i) => false);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +42,6 @@ class _SearchMusicViewState extends State<SearchMusicView> {
             Expanded(child: FutureBuilder(
               future: api.getTracks(),
               builder: (BuildContext context, AsyncSnapshot snapshot){
-                if(snapshot.hasData){
                   return ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (BuildContext context, int index){
@@ -52,10 +51,7 @@ class _SearchMusicViewState extends State<SearchMusicView> {
                       );
                     },
                   );
-                }else{
-                  return const Center(child: CircularProgressIndicator());
-                }
-              },
+                },
             ),
           ),
             Container(
