@@ -22,21 +22,11 @@ Future<void> getMusic(String term) async{
         trackUrl: data[i]['trackUrl'],
         trackArtist: data[i]['artistName'],
       );
-      tracksList.add(Tracks(
-        trackName: "test",
-        trackUrl: "test",
-        trackArtist: "test",
-      ));
       tracksList.add(tracks);
     }
   }
   
   Future<List<Tracks>> getTracks() async{
-    tracksList.add(Tracks(
-      trackName: "test",
-      trackUrl: "test",
-      trackArtist: "test",
-    ));
     print(tracksList.length);
     return tracksList;
     }
