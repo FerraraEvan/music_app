@@ -41,6 +41,7 @@ dependencies:
   just_audio_web: ^0.4.7
   just_audio: ^0.9.30
   cloud_firestore: ^4.1.0
+  flutter_bloc: ^8.1.1
 
 dev_dependencies:
   flutter_test:
