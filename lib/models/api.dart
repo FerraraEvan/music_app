@@ -4,12 +4,15 @@ import 'package:http/http.dart';
 import 'package:music_app/blocs/tracks_bloc.dart';
 import 'package:music_app/models/tracks.dart';
 
+import '../blocs/tracks_events.dart';
+
 
 class Api{
-  TracksBloc _bloc = TracksBloc(List<Tracks>.empty());
+  late TracksBloc _bloc;
+  List<Tracks> trackList=[];
 
-Future<void> getMusic() async{
-  String url = 'http://localhost:4000/music?search=16';
+Future<void> getMusic(String term) async{
+  String url = 'http://localhost:4000/music?search=$term';
   final Response response = await get(Uri.parse(url));
   final List<dynamic> data = jsonDecode(response.body);
   createTracks(data);
@@ -22,16 +25,15 @@ Future<void> getMusic() async{
         trackUrl: data[i]['trackUrl'],
         trackArtist: data[i]['artistName'],
       );
-      //_bloc.add(AddTracksEvent(tracks));
+      _bloc.add(AddTracksEvent(tracks)); 
     }
   }
   
-  Future<TracksBloc> getTracks() async{
-    return _bloc;
+  Future<List<Tracks>> getTracks() async{
+    return trackList;
     }
 
     void setTracks(TracksBloc bloc) {
-      print("test");
       _bloc = bloc;
     }
   }

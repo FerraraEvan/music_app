@@ -7,6 +7,7 @@ class TracksBloc extends Bloc<TracksEvent, TracksState> {
   TracksBloc(List<Tracks> tracks) : super(TracksState(tracks)){
     on<AddTracksEvent>((event, emit) {
       final List<Tracks> tracks = state.tracks;
+      tracks.clear();
       tracks.add(event.tracks);
       emit(TracksState(tracks));
     });

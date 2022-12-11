@@ -17,11 +17,12 @@ class SearchMusicView extends StatefulWidget {
 class _SearchMusicViewState extends State<SearchMusicView> {
   Api api = Api();
   late TracksBloc _bloc;
-
+  List<Tracks> trackList=[];
   @override
   void initState() {
+    WidgetsFlutterBinding.ensureInitialized();
     super.initState();
-    _bloc = TracksBloc(List<Tracks>.empty());
+    _bloc = TracksBloc(trackList);
     api.setTracks(_bloc);
   }
 
@@ -35,10 +36,21 @@ class _SearchMusicViewState extends State<SearchMusicView> {
         ),
         body: Column(
           children: [
-            TextField(onSubmitted: (value) async =>await api.getMusic()),
+            TextField(onChanged: (value) async =>await api.getMusic(value)),
             BlocBuilder<TracksBloc, TracksState>(
               builder: (context, state) {
-                return Text(state.tracks.length.toString());
+                return ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: state.tracks.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(state.tracks[index].trackName!),
+                      subtitle: Text(state.tracks[index].trackArtist!),
+                      trailing: IconButton(icon: const Icon(Icons.play_arrow),
+                      onPressed: () {  },),);
+                  },
+                );
               },
             ),
           ],
@@ -46,7 +58,7 @@ class _SearchMusicViewState extends State<SearchMusicView> {
       ),
     );
   }
-}   
+}
 /*class TracksListView extends StatelessWidget {
   const TracksListView({Key? key}) : super(key: key);
 

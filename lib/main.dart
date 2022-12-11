@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:music_app/pages/login_page.dart';
+import 'package:music_app/pages/connexion_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
