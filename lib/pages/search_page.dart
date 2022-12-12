@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:music_app/blocs/tracks_bloc.dart';
 import 'package:music_app/models/tracks.dart';
 
@@ -17,7 +18,10 @@ class SearchMusicView extends StatefulWidget {
 class _SearchMusicViewState extends State<SearchMusicView> {
   Api api = Api();
   late TracksBloc _bloc;
+  AudioPlayer player = AudioPlayer();
   List<Tracks> trackList=[];
+  bool isSelected = false;
+  bool isPlaying = false;
   @override
   void initState() {
     WidgetsFlutterBinding.ensureInitialized();
@@ -36,19 +40,44 @@ class _SearchMusicViewState extends State<SearchMusicView> {
         ),
         body: Column(
           children: [
-            TextField(onChanged: (value) async =>await api.getMusic(value)),
+            TextField(
+              decoration: const InputDecoration(
+                hintText: 'Search Music',
+              ),
+              onChanged: (value) async =>await api.getMusic(value)),
             BlocBuilder<TracksBloc, TracksState>(
               builder: (context, state) {
                 return ListView.builder(
-                  scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   itemCount: state.tracks.length,
                   itemBuilder: (context, index) {
                     return ListTile(
+                      tileColor: isSelected ? Colors.blue : Colors.white,
                       title: Text(state.tracks[index].trackName!),
                       subtitle: Text(state.tracks[index].trackArtist!),
-                      trailing: IconButton(icon: const Icon(Icons.play_arrow),
-                      onPressed: () {  },),);
+                      trailing: isPlaying ?  IconButton(
+                        icon: const Icon(Icons.pause),
+                        onPressed: (){
+                          setState(() {
+                            isPlaying = !isPlaying;
+                          });
+                        player.pause();
+                        },
+                      ) :  IconButton(
+                        icon: const Icon(Icons.play_arrow),
+                        onPressed: (){
+                          setState(() {
+                            isPlaying = !isPlaying;
+                          });
+                          player.setUrl(state.tracks[index].trackUrl!);
+                          player.play();
+                        }
+                      ),
+                      onTap: () => setState(() {
+                        isSelected = !isSelected;
+                      }
+                    )
+                    );
                   },
                 );
               },
@@ -59,12 +88,3 @@ class _SearchMusicViewState extends State<SearchMusicView> {
     );
   }
 }
-/*class TracksListView extends StatelessWidget {
-  const TracksListView({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    Api api = Api();
-    
-  }
-}*/
