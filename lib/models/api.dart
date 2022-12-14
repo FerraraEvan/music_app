@@ -28,10 +28,6 @@ Future<void> getMusic(String term) async{
       _bloc.add(AddTracksEvent(tracks)); 
     }
   }
-  
-  Future<List<Tracks>> getTracks() async{
-    return trackList;
-    }
 
     void setTracks(TracksBloc bloc) {
       _bloc = bloc;

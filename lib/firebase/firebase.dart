@@ -7,7 +7,7 @@ class FireBaseService{
 
   late FirebaseFirestore db;
   late Stream<QuerySnapshot> stream;
-
+ 
   Future<FirebaseApp> initializeApp() async {
     return await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -20,6 +20,14 @@ class FireBaseService{
   Future<void> addUser(String name){
     return db.collection("users").add({
       'name': name,
+    });
+  }
+  Future<void> addToPlaylist(String url, String name, String artist, String trackName){
+    return db.collection("user").add({
+      'url': url,
+      'name': name,
+      'artist': artist, 
+      'trackName': trackName,
     });
   }
   Future<bool> isInDb(String name) async {

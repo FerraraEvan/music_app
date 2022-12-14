@@ -43,12 +43,19 @@ FireBaseService fireBaseService = FireBaseService();
                   border: OutlineInputBorder(),
                   labelText: 'Pseudo',
                 ),
-                onSubmitted: (String value) {
+                onSubmitted: (String value) async {
                   if(value != ""){
                     Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SearchMusicView(value)),
-                    ); 
+                      context,
+                      MaterialPageRoute(builder: (context) => SearchMusicView(value)),
+                    );
+                  }
+                  else{
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Pseudo non valide'),
+                      ),
+                    );
                   }
                 }
               ),
@@ -56,5 +63,9 @@ FireBaseService fireBaseService = FireBaseService();
         ]),
       ),
     );
+  }
+
+  Future<void> addUserToDb(String value) async {
+    await fireBaseService.addUser(value);
   }
 }

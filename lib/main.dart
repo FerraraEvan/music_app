@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:music_app/pages/connexion_page.dart';
 
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
-  //FireBaseService fireBaseService = FireBaseService();
-  //fireBaseService.initializeApp();
 }
 
 class MyApp extends StatelessWidget {

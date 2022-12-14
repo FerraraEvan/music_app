@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:like_button/like_button.dart';
 import 'package:music_app/blocs/tracks_bloc.dart';
+import 'package:music_app/firebase/firebase.dart';
 import 'package:music_app/models/tracks.dart';
+import 'package:music_app/pages/placement_page.dart';
 
 import '../blocs/tracks_states.dart';
 import '../models/api.dart';
@@ -22,6 +25,11 @@ class _SearchMusicViewState extends State<SearchMusicView> {
   List<Tracks> trackList=[];
   bool isSelected = false;
   bool isPlaying = false;
+  late String music;
+  late String artist;
+  late String name;
+  FireBaseService fireBaseService = FireBaseService();
+  
   @override
   void initState() {
     WidgetsFlutterBinding.ensureInitialized();
@@ -47,44 +55,82 @@ class _SearchMusicViewState extends State<SearchMusicView> {
               onChanged: (value) async =>await api.getMusic(value)),
             BlocBuilder<TracksBloc, TracksState>(
               builder: (context, state) {
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: state.tracks.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      tileColor: isSelected ? Colors.blue : Colors.white,
-                      title: Text(state.tracks[index].trackName!),
-                      subtitle: Text(state.tracks[index].trackArtist!),
-                      trailing: isPlaying ?  IconButton(
-                        icon: const Icon(Icons.pause),
-                        onPressed: (){
-                          setState(() {
-                            isPlaying = !isPlaying;
-                          });
-                        player.pause();
-                        },
-                      ) :  IconButton(
-                        icon: const Icon(Icons.play_arrow),
-                        onPressed: (){
-                          setState(() {
-                            isPlaying = !isPlaying;
-                          });
-                          player.setUrl(state.tracks[index].trackUrl!);
-                          player.play();
-                        }
-                      ),
-                      onTap: () => setState(() {
-                        isSelected = !isSelected;
-                      }
-                    )
-                    );
-                  },
-                );
-              },
+                if(state.tracks.isNotEmpty){
+                return getListTracks(state);
+                }
+                else{
+                  return const CircularProgressIndicator();
+                }
+              }
+              ,
             ),
+            Container(
+              padding: const EdgeInsets.only(top: 20),
+              child: Visibility(visible: isSelected, child: ElevatedButton(
+                onPressed: () {
+                  fireBaseService.initializeApp();
+                  fireBaseService.initializeDb();
+                  fireBaseService.addToPlaylist(music, widget._username, artist, name);
+                }, 
+                child: const Text('Add to playlist')
+              )),
+            ),
+            Container(
+              padding: const  EdgeInsets.only(top: 20),
+              child: ElevatedButton(
+                onPressed: ()=>
+                goToPlacementPage(context),
+              child: const Text('Go to playlist')
+              ),
+            )
           ],
         ),
       ),
+    );
+  }
+
+  Future<dynamic> goToPlacementPage(BuildContext context) {
+    return Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const PlacementMusicView()));
+  }
+
+  ListView getListTracks(TracksState state) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: state.tracks.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          tileColor: isSelected ? Colors.blue : Colors.white,
+          title: Text(state.tracks[index].trackName!),
+          subtitle: Text(state.tracks[index].trackArtist!),
+          trailing: isPlaying ?  IconButton(
+            icon: const Icon(Icons.pause),
+            onPressed: (){
+              setState(() {
+                isPlaying = !isPlaying;
+              });
+            player.pause();
+            },
+          ) :  IconButton(
+            icon: const Icon(Icons.play_arrow),
+            onPressed: (){
+              setState(() {
+                isPlaying = !isPlaying;
+              });
+              player.setUrl(state.tracks[index].trackUrl!);
+              player.play();
+            }
+          ),
+          onTap: () => setState(() {
+            music = state.tracks[index].trackUrl!;
+            artist = state.tracks[index].trackArtist!;
+            name = state.tracks[index].trackName!;
+            isSelected = !isSelected;
+          }
+        )
+        );
+      },
     );
   }
 }
