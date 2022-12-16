@@ -28,7 +28,9 @@ class _SearchMusicViewState extends State<SearchMusicView> {
   late String artist;
   late String name;
   late String username;
+  late String id;
   FireBaseService fireBaseService = FireBaseService();
+  
   
   @override
   void initState() {
@@ -72,7 +74,7 @@ class _SearchMusicViewState extends State<SearchMusicView> {
                 onPressed: () async {
                   fireBaseService.initializeApp();
                   fireBaseService.initializeDb();
-                  fireBaseService.addToPlaylist(music, widget._username, artist, name);
+                  fireBaseService.addToPlaylist(music, widget._username, artist, name,id);
                 }, 
                 child: const Text('Add to playlist')
               )),
@@ -129,6 +131,7 @@ class _SearchMusicViewState extends State<SearchMusicView> {
             music = state.tracks[index].trackUrl!;
             artist = state.tracks[index].trackArtist!;
             name = state.tracks[index].trackName!;
+            id=state.tracks[index].id!;
             isSelected = !isSelected;
           }
         )

@@ -25,7 +25,7 @@ class _PlacementMusicViewState extends State<PlacementMusicView> {
         title: const Text('Placement Music'),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('track').snapshots(),
+        stream: FirebaseFirestore.instance.collection('track').orderBy('like', descending: true).snapshots(),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) 
         {
           if(!snapshot.hasData){
@@ -54,7 +54,7 @@ class _PlacementMusicViewState extends State<PlacementMusicView> {
               Text(snapshot.data.docs[index]['like'].toString()),
           ]),
         ),
-            ),
+      ),
     );
   }
 
@@ -62,16 +62,17 @@ class _PlacementMusicViewState extends State<PlacementMusicView> {
     return isLiked ?  IconButton(
             icon: const Icon(Icons.favorite,color: Colors.red,),
             onPressed: () async {
-              fireBaseService.removeLike(snapshot.data.docs[index]['name'], snapshot.data.docs[index]['trackName']);
+              fireBaseService.removeLike(snapshot.data.docs[index]['name'], snapshot.data.docs[index]['trackName'], snapshot.data.docs[index]['id']);
             setState(() {
               isLiked = !isLiked;
-            });
+            }
+      );
     },
   ) :  IconButton(
     icon: const Icon(Icons.favorite),
     onPressed: () async {
             setState(() {
-              fireBaseService.addLike(snapshot.data.docs[index]['name'], snapshot.data.docs[index]['trackName']);
+              fireBaseService.addLike(snapshot.data.docs[index]['name'], snapshot.data.docs[index]['trackName'], snapshot.data.docs[index]['id']);
               isLiked = !isLiked;
             });
     }

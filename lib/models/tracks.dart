@@ -1,9 +1,12 @@
+import 'package:uuid/uuid.dart';
+
 class Tracks{
   final String? trackName;
   final String? trackUrl;
   final String? trackArtist;
+  final String? id;
   bool? isLiked=false;
-  Tracks({this.trackName, this.trackUrl, this.trackArtist,this.isLiked});
+  Tracks({this.trackName, this.trackUrl, this.trackArtist,this.isLiked, this.id});
 
   factory Tracks.fromJson(Map<String, dynamic> json){
     return Tracks(

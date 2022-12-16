@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:music_app/blocs/tracks_bloc.dart';
 import 'package:music_app/models/tracks.dart';
+import 'package:uuid/uuid.dart';
 
 import '../blocs/tracks_events.dart';
 
@@ -10,7 +11,8 @@ import '../blocs/tracks_events.dart';
 class Api{
   late TracksBloc _bloc;
   List<Tracks> trackList=[];
-
+  Uuid uuid = Uuid();
+  
 Future<void> getMusic(String term) async{
   String url = 'http://localhost:4000/music?search=$term';
   final Response response = await get(Uri.parse(url));
@@ -24,7 +26,8 @@ Future<void> getMusic(String term) async{
         trackName: data[i]['trackName'],
         trackUrl: data[i]['trackUrl'],
         trackArtist: data[i]['artistName'],
-        isLiked: false
+        isLiked: false,
+        id: uuid.v4()
       );
       _bloc.add(AddTracksEvent(tracks)); 
     }
