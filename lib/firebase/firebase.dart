@@ -22,13 +22,14 @@ class FireBaseService{
       'name': name,
     });
   }
-  Future<void> addToPlaylist(String url, String name, String artist, String trackName){
+  Future<void> addToPlaylist(String url, String name, String artist, String trackName,String id){
     return db.collection("track").add({
       'url': url,
       'name': name,
       'artist': artist, 
       'trackName': trackName,
       'like':0,
+      'id': id,
     });
   }
   Future<bool> isInDb(String name) async {
@@ -39,16 +40,18 @@ class FireBaseService{
     return db.collection('track').where('name', isEqualTo: name).get().then((value) => value.docs.first.data()['like']);
   }
 
-  Future<void> addLike(String name,String trackName) async {
+  Future<void> addLike(String name,String trackName,String id) async {
     return db.collection('track')
     .where('name', isEqualTo: name)
     .where('trackName', isEqualTo: trackName)
+    .where('id', isEqualTo: id)
     .get().then((value) => value.docs.first.reference.update({'like': value.docs.first.data()['like']+1}));
   }
-  Future<void> removeLike(String name,String trackName) async {
+  Future<void> removeLike(String name,String trackName,String id) async {
     return db.collection('track')
     .where('name', isEqualTo: name)
     .where('trackName', isEqualTo: trackName)
+    .where('id', isEqualTo: id)
     .get().then((value) => value.docs.first.reference.update({'like': value.docs.first.data()['like']-1}));
   }
 }
