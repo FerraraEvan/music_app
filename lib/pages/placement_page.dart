@@ -25,7 +25,7 @@ class _PlacementMusicViewState extends State<PlacementMusicView> {
         title: const Text('Placement Music'),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('user').snapshots(),
+        stream: FirebaseFirestore.instance.collection('track').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) 
         {
           if(!snapshot.hasData){
@@ -51,9 +51,8 @@ class _PlacementMusicViewState extends State<PlacementMusicView> {
           child: Wrap(
             children: [
               initializeIconButton(snapshot, index),
-              Text(fireBaseService.getLike(snapshot.data.docs[index]['name']).toString()),
-            ],
-          ),
+              Text(snapshot.data.docs[index]['like'].toString()),
+          ]),
         ),
             ),
     );
