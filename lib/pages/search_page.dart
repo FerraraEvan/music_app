@@ -59,7 +59,9 @@ class _SearchMusicViewState extends State<SearchMusicView> {
                 return getListTracks(state);
                 }
                 else{
-                  return const CircularProgressIndicator();
+                  return Container(
+                    padding: const EdgeInsets.only(top: 50),
+                    child: const Text("Search a song..."));
                 }
               }
               ,
@@ -101,7 +103,7 @@ class _SearchMusicViewState extends State<SearchMusicView> {
       itemCount: state.tracks.length,
       itemBuilder: (context, index) {
         return ListTile(
-          tileColor: isSelected ? Colors.blue : Colors.white,
+          tileColor: state.tracks[index].getLiked ? Colors.blue : Colors.white,
           title: Text(state.tracks[index].trackName!),
           subtitle: Text(state.tracks[index].trackArtist!),
           trailing: isPlaying ?  IconButton(
@@ -123,6 +125,7 @@ class _SearchMusicViewState extends State<SearchMusicView> {
             }
           ),
           onTap: () => setState(() {
+            state.tracks[index].setLiked(!state.tracks[index].isLiked!);
             music = state.tracks[index].trackUrl!;
             artist = state.tracks[index].trackArtist!;
             name = state.tracks[index].trackName!;

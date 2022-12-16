@@ -1,9 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import '../firebase/firebase.dart';
-import '../firebase_options.dart';
-
 class PlacementMusicView extends StatefulWidget {
   final String _username; 
   const PlacementMusicView(this._username,{Key? key}): super(key: key);

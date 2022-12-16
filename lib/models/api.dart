@@ -24,6 +24,7 @@ Future<void> getMusic(String term) async{
         trackName: data[i]['trackName'],
         trackUrl: data[i]['trackUrl'],
         trackArtist: data[i]['artistName'],
+        isLiked: false
       );
       _bloc.add(AddTracksEvent(tracks)); 
     }
