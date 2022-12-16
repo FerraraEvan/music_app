@@ -43,7 +43,7 @@ FireBaseService fireBaseService = FireBaseService();
                   border: OutlineInputBorder(),
                   labelText: 'Pseudo',
                 ),
-                onSubmitted: (String value) async {
+                onSubmitted: (String value) {
                   if(value != ""){
                     Navigator.push(
                       context,

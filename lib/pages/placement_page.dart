@@ -1,19 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:like_button/like_button.dart';
+import '../firebase/firebase.dart';
 import '../firebase_options.dart';
 
 class PlacementMusicView extends StatefulWidget {
-  const PlacementMusicView({super.key});
-
-
+  final String _username; 
+  const PlacementMusicView(this._username,{Key? key}): super(key: key);
   @override
   State<PlacementMusicView> createState() => _PlacementMusicViewState();
 } 
 
 class _PlacementMusicViewState extends State<PlacementMusicView> {
   bool isLiked = false;
+  late int numberLike;
+  FireBaseService fireBaseService = FireBaseService();
   @override
   void initState() {
     WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +22,7 @@ class _PlacementMusicViewState extends State<PlacementMusicView> {
   }
   @override
   Widget build(BuildContext context) {
-    getData();
+    fireBaseService.initializeDb();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Placement Music'),
@@ -34,39 +35,52 @@ class _PlacementMusicViewState extends State<PlacementMusicView> {
             return const Center(child: CircularProgressIndicator());
           }
           else{
-          return ListView.builder(
-            itemCount: snapshot.data.docs.length,
-            itemBuilder: (context, index) => 
-            ListTile(
-              leading: Text(index.toString()),
-              title: Text(snapshot.data.docs[index]['trackName']+" - "+snapshot.data.docs[index]['artist']),
-              subtitle: Text("Ajouté par "+snapshot.data.docs[index]['name']),
-              trailing: isLiked ?  IconButton(
-            icon: const Icon(Icons.favorite,color: Colors.red,),
-            onPressed: (){
-              setState(() {
-                isLiked = !isLiked;
-              });
-            },
-          ) :  IconButton(
-            icon: const Icon(Icons.favorite),
-            onPressed: (){
-              setState(() {
-                isLiked = !isLiked;
-              });
-            }
-          ),
-        ),
-          );
+          return getList(snapshot);
           }
         },
       )
     );
   }
+
+  ListView getList(AsyncSnapshot<dynamic> snapshot) {
+    return ListView.builder(
+      itemCount: snapshot.data.docs.length,
+      itemBuilder: (context, index) => 
+      ListTile(
+        leading: Text(index.toString()),
+        title: Text(snapshot.data.docs[index]['trackName']+" - "+snapshot.data.docs[index]['artist']),
+        subtitle: Text("Ajouté par "+snapshot.data.docs[index]['name']),
+        trailing: SizedBox(
+          child: Wrap(
+            children: [
+              initializeIconButton(snapshot, index),
+              Text(fireBaseService.getLike(snapshot.data.docs[index]['name']).toString()),
+            ],
+          ),
+        ),
+            ),
+    );
+  }
+
+  IconButton initializeIconButton(AsyncSnapshot<dynamic> snapshot, int index) {
+    return isLiked ?  IconButton(
+            icon: const Icon(Icons.favorite,color: Colors.red,),
+            onPressed: () async {
+              fireBaseService.removeLike(snapshot.data.docs[index]['name'], snapshot.data.docs[index]['trackName']);
+            setState(() {
+              isLiked = !isLiked;
+            });
+    },
+  ) :  IconButton(
+    icon: const Icon(Icons.favorite),
+    onPressed: () async {
+            setState(() {
+              fireBaseService.addLike(snapshot.data.docs[index]['name'], snapshot.data.docs[index]['trackName']);
+              isLiked = !isLiked;
+            });
+    }
+  );
+  }
 }
 
-void getData() async {
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-}
+

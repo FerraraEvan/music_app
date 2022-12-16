@@ -2,8 +2,8 @@ class Tracks{
   final String? trackName;
   final String? trackUrl;
   final String? trackArtist;
-
-  Tracks({this.trackName, this.trackUrl, this.trackArtist});
+  final bool? isLiked;
+  Tracks({this.trackName, this.trackUrl, this.trackArtist,this.isLiked});
 
   factory Tracks.fromJson(Map<String, dynamic> json){
     return Tracks(

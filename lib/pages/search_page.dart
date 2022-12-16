@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:like_button/like_button.dart';
 import 'package:music_app/blocs/tracks_bloc.dart';
 import 'package:music_app/firebase/firebase.dart';
 import 'package:music_app/models/tracks.dart';
@@ -28,6 +27,7 @@ class _SearchMusicViewState extends State<SearchMusicView> {
   late String music;
   late String artist;
   late String name;
+  late String username;
   FireBaseService fireBaseService = FireBaseService();
   
   @override
@@ -67,7 +67,7 @@ class _SearchMusicViewState extends State<SearchMusicView> {
             Container(
               padding: const EdgeInsets.only(top: 20),
               child: Visibility(visible: isSelected, child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   fireBaseService.initializeApp();
                   fireBaseService.initializeDb();
                   fireBaseService.addToPlaylist(music, widget._username, artist, name);
@@ -92,7 +92,7 @@ class _SearchMusicViewState extends State<SearchMusicView> {
   Future<dynamic> goToPlacementPage(BuildContext context) {
     return Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const PlacementMusicView()));
+                    MaterialPageRoute(builder: (context) => PlacementMusicView(widget._username)));
   }
 
   ListView getListTracks(TracksState state) {

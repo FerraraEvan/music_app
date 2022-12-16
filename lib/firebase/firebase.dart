@@ -15,10 +15,10 @@ class FireBaseService{
   }
   Future<void> initializeDb() async {
     db = FirebaseFirestore.instance;
-    stream = db.collection("users").snapshots();
+    stream = db.collection("user").snapshots();
   }
   Future<void> addUser(String name){
-    return db.collection("users").add({
+    return db.collection("user").add({
       'name': name,
     });
   }
@@ -28,9 +28,27 @@ class FireBaseService{
       'name': name,
       'artist': artist, 
       'trackName': trackName,
+      'like':0,
     });
   }
   Future<bool> isInDb(String name) async {
-    return db.collection('users').where('name', isEqualTo: name).get().then((value) => value.docs.isNotEmpty);
+    return db.collection('user').where('name', isEqualTo: name).get().then((value) => value.docs.isNotEmpty);
+  }
+
+  Future<int> getLike(String name) async {
+    return db.collection('user').where('name', isEqualTo: name).get().then((value) => value.docs.first.data()['like']);
+  }
+
+  Future<void> addLike(String name,String trackName) async {
+    return db.collection('user')
+    .where('name', isEqualTo: name)
+    .where('trackName', isEqualTo: trackName)
+    .get().then((value) => value.docs.first.reference.update({'like': value.docs.first.data()['like']+1}));
+  }
+  Future<void> removeLike(String name,String trackName) async {
+    return db.collection('user')
+    .where('name', isEqualTo: name)
+    .where('trackName', isEqualTo: trackName)
+    .get().then((value) => value.docs.first.reference.update({'like': value.docs.first.data()['like']-1}));
   }
 }
