@@ -14,6 +14,9 @@ class Api{
   Uuid uuid = const Uuid();
   
 Future<void> getMusic(String term) async{
+  if(term.isEmpty){
+    _bloc.add(ClearTracksEvent());  
+  }
   String url = 'http://localhost:4000/music?search=$term';
   final Response response = await get(Uri.parse(url));
   final List<dynamic> data = jsonDecode(response.body);

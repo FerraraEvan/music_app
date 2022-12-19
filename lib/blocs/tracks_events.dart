@@ -13,3 +13,7 @@ class RemoveTracksEvent extends TracksEvent {
 
   RemoveTracksEvent(this.tracks);
 }
+
+class ClearTracksEvent extends TracksEvent {
+  ClearTracksEvent();
+}

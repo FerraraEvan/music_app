@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../firebase/firebase.dart';
@@ -43,7 +45,7 @@ class _PlacementMusicViewState extends State<PlacementMusicView> {
     return ListView.builder(
       itemCount: snapshot.data.docs.length,
       itemBuilder: (context, index) {
-      checkIfLiked(snapshot, index);
+        checkIfLiked(snapshot, index);
       return ListTile(
         leading: Text(index.toString()),
         title: Text(snapshot.data.docs[index]['trackName']+" - "+snapshot.data.docs[index]['artist']),
@@ -73,8 +75,8 @@ class _PlacementMusicViewState extends State<PlacementMusicView> {
   ) :  IconButton(
     icon: const Icon(Icons.favorite),
     onPressed: () async {
-            setState(() {
               fireBaseService.addLike(snapshot.data.docs[index]['name'], snapshot.data.docs[index]['trackName'], snapshot.data.docs[index]['id']);
+            setState(() {
               isLiked = !isLiked;
             });
     }
@@ -83,16 +85,12 @@ class _PlacementMusicViewState extends State<PlacementMusicView> {
 
   Future<void> checkIfLiked(AsyncSnapshot<dynamic> snapshot, int index)async {
     if(snapshot.data.docs[index]['userLiked'].contains(widget._username)){
-      setState(() {
-        isLiked = true;
-      });
-    }
-    else{
-      setState(() {
-        isLiked = false;
-      });
-    }
+     isLiked = true;
   }
+  else{
+    isLiked = false;
+  }
+}
 }
 
 

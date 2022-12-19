@@ -11,7 +11,6 @@ class Tracks{
       trackName: json[0]['trackName'],
       trackUrl: json[0]['trackUrl'],
       trackArtist: json[0]['artistName'],  
-      isLiked: false
     );
   }
 
