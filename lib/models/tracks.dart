@@ -3,8 +3,8 @@ class Tracks{
   final String? trackUrl;
   final String? trackArtist;
   final String? id;
-  bool? isLiked=false;
-  Tracks({this.trackName, this.trackUrl, this.trackArtist,this.isLiked, this.id});
+  bool? isSelected=false;
+  Tracks({this.trackName, this.trackUrl, this.trackArtist,this.isSelected, this.id});
 
   factory Tracks.fromJson(Map<String, dynamic> json){
     return Tracks(
@@ -14,11 +14,11 @@ class Tracks{
     );
   }
 
-  setLiked(bool? isLiked){
-    this.isLiked = isLiked;
+  setSelected(bool? isSelected){
+    this.isSelected = isSelected;
   }
 
-  get getLiked{
-    return isLiked;
+  get getSelected{
+    return isSelected;
   } 
 }

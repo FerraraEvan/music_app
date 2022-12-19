@@ -50,11 +50,14 @@ class _SearchMusicViewState extends State<SearchMusicView> {
         ),
         body: Column(
           children: [
-            TextField(
-              decoration: const InputDecoration(
-                hintText: 'Search Music',
-              ),
-              onChanged: (value) async =>await api.getMusic(value)),
+            Container(
+              padding: const EdgeInsets.only(left: 5, right: 5),
+              child: TextField(
+                decoration: const InputDecoration(
+                  hintText: 'Search Music',
+                ),
+                onChanged: (value) async =>await api.getMusic(value)),
+            ),
             BlocBuilder<TracksBloc, TracksState>(
               builder: (context, state) {
                 if(state.tracks.isNotEmpty){
@@ -107,7 +110,7 @@ class _SearchMusicViewState extends State<SearchMusicView> {
           itemCount: state.tracks.length,
           itemBuilder: (context, index) {
             return ListTile(
-              tileColor: state.tracks[index].getLiked ? Colors.blue : Colors.white,
+              tileColor: state.tracks[index].getSelected ? Colors.blue : Colors.white,
               title: Text(state.tracks[index].trackName!),
               subtitle: Text(state.tracks[index].trackArtist!),
               trailing: isPlaying ?  IconButton(
@@ -128,7 +131,7 @@ class _SearchMusicViewState extends State<SearchMusicView> {
                 }
               ),
               onTap: () => setState(() {
-                state.tracks[index].setLiked(!state.tracks[index].isLiked!);
+                state.tracks[index].setSelected(!state.tracks[index].isSelected!);
                 music = state.tracks[index].trackUrl!;
                 artist = state.tracks[index].trackArtist!;
                 name = state.tracks[index].trackName!;
@@ -144,7 +147,8 @@ class _SearchMusicViewState extends State<SearchMusicView> {
   }
 
   void playMusic(TracksState state, int index) {
-    player.setUrl(state.tracks[index].trackUrl!);
+    player.setAudioSource(AudioSource.uri(Uri.parse(state.tracks[index].trackUrl!)));
+    player.load();
     player.setClip(start: const Duration(seconds: 60), end: const Duration(seconds: 70));
     player.play();
   }
