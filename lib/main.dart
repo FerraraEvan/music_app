@@ -11,8 +11,6 @@ Future<void> main() async {
     await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  db = FirebaseFirestore.instance;
-  stream = db.collection("user").snapshots();
   runApp(const MyApp());
 }
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:music_app/pages/search_page.dart';
-
 import '../firebase/firebase.dart';
 
 class ConnexionPage extends StatefulWidget {
@@ -13,7 +12,7 @@ class ConnexionPage extends StatefulWidget {
 
 class _ConnexionPageState extends State<ConnexionPage> {
 FireBaseService fireBaseService = FireBaseService();
-    
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

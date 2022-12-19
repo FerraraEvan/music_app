@@ -99,44 +99,53 @@ class _SearchMusicViewState extends State<SearchMusicView> {
                     MaterialPageRoute(builder: (context) => PlacementMusicView(widget._username)));
   }
 
-  ListView getListTracks(TracksState state) {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: state.tracks.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          tileColor: state.tracks[index].getLiked ? Colors.blue : Colors.white,
-          title: Text(state.tracks[index].trackName!),
-          subtitle: Text(state.tracks[index].trackArtist!),
-          trailing: isPlaying ?  IconButton(
-            icon: const Icon(Icons.pause),
-            onPressed: (){
-              setState(() {
-                isPlaying = !isPlaying;
-              });
-            player.pause();
-            },
-          ) :  IconButton(
-            icon: const Icon(Icons.play_arrow),
-            onPressed: (){
-              setState(() {
-                isPlaying = !isPlaying;
-              });
-              player.setUrl(state.tracks[index].trackUrl!);
-              player.play();
-            }
-          ),
-          onTap: () => setState(() {
-            state.tracks[index].setLiked(!state.tracks[index].isLiked!);
-            music = state.tracks[index].trackUrl!;
-            artist = state.tracks[index].trackArtist!;
-            name = state.tracks[index].trackName!;
-            id=state.tracks[index].id!;
-            isSelected = !isSelected;
-          }
-        )
-        );
-      },
+  Expanded getListTracks(TracksState state) {
+    return Expanded(
+      child: SingleChildScrollView(
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: state.tracks.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              tileColor: state.tracks[index].getLiked ? Colors.blue : Colors.white,
+              title: Text(state.tracks[index].trackName!),
+              subtitle: Text(state.tracks[index].trackArtist!),
+              trailing: isPlaying ?  IconButton(
+                icon: const Icon(Icons.pause),
+                onPressed: (){
+                  setState(() {
+                    isPlaying = !isPlaying;
+                  });
+                player.pause();
+                },
+              ) :  IconButton(
+                icon: const Icon(Icons.play_arrow),
+                onPressed: (){
+                  setState(() {
+                    isPlaying = !isPlaying;
+                  });
+                  playMusic(state, index);
+                }
+              ),
+              onTap: () => setState(() {
+                state.tracks[index].setLiked(!state.tracks[index].isLiked!);
+                music = state.tracks[index].trackUrl!;
+                artist = state.tracks[index].trackArtist!;
+                name = state.tracks[index].trackName!;
+                id=state.tracks[index].id!;
+                isSelected = !isSelected;
+              }
+            )
+            );
+          },
+        ),
+      ),
     );
+  }
+
+  void playMusic(TracksState state, int index) {
+    player.setUrl(state.tracks[index].trackUrl!);
+    player.setClip(start: const Duration(seconds: 60), end: const Duration(seconds: 70));
+    player.play();
   }
 }

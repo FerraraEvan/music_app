@@ -42,8 +42,9 @@ class _PlacementMusicViewState extends State<PlacementMusicView> {
   ListView getList(AsyncSnapshot<dynamic> snapshot) {
     return ListView.builder(
       itemCount: snapshot.data.docs.length,
-      itemBuilder: (context, index) => 
-      ListTile(
+      itemBuilder: (context, index) {
+      checkIfLiked(snapshot, index);
+      return ListTile(
         leading: Text(index.toString()),
         title: Text(snapshot.data.docs[index]['trackName']+" - "+snapshot.data.docs[index]['artist']),
         subtitle: Text("Ajouté par "+snapshot.data.docs[index]['name']),
@@ -51,10 +52,11 @@ class _PlacementMusicViewState extends State<PlacementMusicView> {
           child: Wrap(
             children: [
               initializeIconButton(snapshot, index),
-              Text(snapshot.data.docs[index]['like'].toString()),
+              Text(snapshot.data.docs[index]['userLiked'].length.toString()),
           ]),
         ),
-      ),
+      );
+      },
     );
   }
 
@@ -77,6 +79,19 @@ class _PlacementMusicViewState extends State<PlacementMusicView> {
             });
     }
   );
+  }
+
+  Future<void> checkIfLiked(AsyncSnapshot<dynamic> snapshot, int index)async {
+    if(snapshot.data.docs[index]['userLiked'].contains(widget._username)){
+      setState(() {
+        isLiked = true;
+      });
+    }
+    else{
+      setState(() {
+        isLiked = false;
+      });
+    }
   }
 }
 

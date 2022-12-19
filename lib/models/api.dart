@@ -11,7 +11,7 @@ import '../blocs/tracks_events.dart';
 class Api{
   late TracksBloc _bloc;
   List<Tracks> trackList=[];
-  Uuid uuid = Uuid();
+  Uuid uuid = const Uuid();
   
 Future<void> getMusic(String term) async{
   String url = 'http://localhost:4000/music?search=$term';
