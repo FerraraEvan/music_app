@@ -23,40 +23,43 @@ FireBaseService fireBaseService = FireBaseService();
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children:[
-            Container(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: const Text(
-                "Entrez votre pseudo",
-              style: TextStyle(
-                color: Colors.blue,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+              Container(
+                padding:const EdgeInsets.only(bottom: 20),
+                child: const Text(
+                  "Enter your pseudo",
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+                ),
               ),
-              ),
-            ),
             SizedBox(
               height:   100,
               width: 500,
-              child: TextField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Pseudo',
+              child: Container(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: TextField(
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Pseudo',
+                  ),
+                  onSubmitted: (String value) {
+                    if(value != ""){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SearchMusicView(value)),
+                      );
+                    }
+                    else{
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Pseudo non valide'),
+                        ),
+                      );
+                    }
+                  }
                 ),
-                onSubmitted: (String value) {
-                  if(value != ""){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SearchMusicView(value)),
-                    );
-                  }
-                  else{
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Pseudo non valide'),
-                      ),
-                    );
-                  }
-                }
               ),
             ),
         ]),

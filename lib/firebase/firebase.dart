@@ -13,22 +13,18 @@ class FireBaseService{
       options: DefaultFirebaseOptions.currentPlatform,
     );
   }
+  
   Future<void> initializeDb() async {
     db = FirebaseFirestore.instance;
-    stream = db.collection("user").snapshots();
+    stream = db.collection("track").snapshots();
   }
-  Future<void> addUser(String name){
-    return db.collection("user").add({
-      'name': name,
-    });
-  }
+
   Future<void> addToPlaylist(String url, String name, String artist, String trackName,String id){
     return db.collection("track").add({
       'url': url,
       'name': name,
       'artist': artist, 
       'trackName': trackName,
-      'like':0,
       'id': id,
       'userLiked':[],
     });
@@ -41,17 +37,17 @@ class FireBaseService{
     return db.collection('track').where('name', isEqualTo: name).get().then((value) => value.docs.first.data()['like']);
   }
 
-  Future<void> addLike(String username,String trackName,String id) async {
+  Future<void> addLike(String name,String trackName,String id, String username) async {
     return db.collection("track")
-    .where('name', isEqualTo: username) 
+    .where('name', isEqualTo: name) 
     .where('trackName', isEqualTo: trackName)
     .where('id', isEqualTo: id)
     .get().then((value) => value.docs.first.reference.update({'userLiked': FieldValue.arrayUnion([username])}));
     }
   
-  Future<void> removeLike(String username,String trackName,String id) async {
+  Future<void> removeLike(String name,String trackName,String id, String username) async {
     return db.collection('track')
-    .where('name', isEqualTo: username)
+    .where('name', isEqualTo: name)
     .where('trackName', isEqualTo: trackName)
     .where('id', isEqualTo: id)
     .get().then((value) => value.docs.first.reference.update({'userLiked': FieldValue.arrayRemove([username])}));

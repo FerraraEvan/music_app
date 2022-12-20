@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 92ba4ae0a5478f23e9f7448c8a21e78d8dfd0f97
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../firebase/firebase.dart';
@@ -25,7 +30,7 @@ class _PlacementMusicViewState extends State<PlacementMusicView> {
         title: const Text('Placement Music'),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('track').orderBy('like', descending: true).snapshots(),
+        stream: FirebaseFirestore.instance.collection('track').orderBy('userLiked', descending: true).snapshots(),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) 
         {
           if(!snapshot.hasData){
@@ -64,7 +69,7 @@ class _PlacementMusicViewState extends State<PlacementMusicView> {
     return isLiked ?  IconButton(
             icon: const Icon(Icons.favorite,color: Colors.red,),
             onPressed: () async {
-              fireBaseService.removeLike(snapshot.data.docs[index]['name'], snapshot.data.docs[index]['trackName'], snapshot.data.docs[index]['id']);
+              fireBaseService.removeLike(snapshot.data.docs[index]['name'], snapshot.data.docs[index]['trackName'], snapshot.data.docs[index]['id'], widget._username );
             setState(() {
               isLiked = !isLiked;
             }
@@ -73,7 +78,7 @@ class _PlacementMusicViewState extends State<PlacementMusicView> {
   ) :  IconButton(
     icon: const Icon(Icons.favorite),
     onPressed: () async {
-              fireBaseService.addLike(snapshot.data.docs[index]['name'], snapshot.data.docs[index]['trackName'], snapshot.data.docs[index]['id']);
+              fireBaseService.addLike(snapshot.data.docs[index]['name'], snapshot.data.docs[index]['trackName'], snapshot.data.docs[index]['id'], widget._username);
             setState(() {
               isLiked = !isLiked;
             });
