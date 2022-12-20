@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../firebase/firebase.dart';
@@ -47,7 +45,7 @@ class _PlacementMusicViewState extends State<PlacementMusicView> {
       itemBuilder: (context, index) {
         checkIfLiked(snapshot, index);
       return ListTile(
-        leading: Text(index.toString()),
+        leading: Text((index+1).toString()),
         title: Text(snapshot.data.docs[index]['trackName']+" - "+snapshot.data.docs[index]['artist']),
         subtitle: Text("Ajouté par "+snapshot.data.docs[index]['name']),
         trailing: SizedBox(
