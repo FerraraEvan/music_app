@@ -128,12 +128,7 @@ class _SearchMusicViewState extends State<SearchMusicView> {
                 }
               ),
               onTap: () => setState(() {
-                state.tracks[index].setLiked(!state.tracks[index].isLiked!);
-                music = state.tracks[index].trackUrl!;
-                artist = state.tracks[index].trackArtist!;
-                name = state.tracks[index].trackName!;
-                id=state.tracks[index].id!;
-                isSelected = !isSelected;
+                setCurrentInfo(state, index);
               }
             )
             );
@@ -141,6 +136,15 @@ class _SearchMusicViewState extends State<SearchMusicView> {
         ),
       ),
     );
+  }
+
+  void setCurrentInfo(TracksState state, int index) {
+    state.tracks[index].setLiked(!state.tracks[index].isLiked!);
+    music = state.tracks[index].trackUrl!;
+    artist = state.tracks[index].trackArtist!;
+    name = state.tracks[index].trackName!;
+    id=state.tracks[index].id!;
+    isSelected = !isSelected;
   }
 
   void playMusic(TracksState state, int index) {
