@@ -1,7 +1,6 @@
 
 
 import 'dart:io';
-
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,7 +46,6 @@ class _SearchMusicViewState extends State<SearchMusicView> {
 
   @override
   Widget build(BuildContext context) {
-    getUrl();
     return BlocProvider<TracksBloc>.value(
       value: _bloc,
       child: Scaffold(
@@ -98,8 +96,11 @@ class _SearchMusicViewState extends State<SearchMusicView> {
                 },
               child: const Text('Go to playlist')
               ),
-            )
-          ],
+            ),
+            ElevatedButton(
+              onPressed: uploadFile, 
+              child: const Text("Upload file")
+        )],
         ),
       ),
     );
@@ -116,6 +117,7 @@ class _SearchMusicViewState extends State<SearchMusicView> {
       child: SingleChildScrollView(
         child: ListView.builder(
           shrinkWrap: true,
+          scrollDirection: Axis.vertical,
           itemCount: state.tracks.length,
           itemBuilder: (context, index) {
             return ListTile(
@@ -184,4 +186,19 @@ class _SearchMusicViewState extends State<SearchMusicView> {
       print(e);
     }
   }
-}
+
+  Future<void> uploadFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['mp3'],
+    );
+    if (result != null) {
+      String trackName = result.files.single.name.split('.').first;
+      File file = File(result.files.single.path!);
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference ref = storage.ref().child(trackName);
+      ref.putFile(file);
+    }
+  }
+}   
+  

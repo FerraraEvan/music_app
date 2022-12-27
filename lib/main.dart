@@ -23,8 +23,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.pink,
       ),
-      //home: const ConnexionPage(title: 'Music App'),
-      home: const SearchMusicView("trest"),
+      home: const ConnexionPage(title: 'Music App'),
     );
   }
 }
