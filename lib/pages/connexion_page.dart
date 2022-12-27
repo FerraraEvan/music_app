@@ -66,8 +66,4 @@ FireBaseService fireBaseService = FireBaseService();
       ),
     );
   }
-
-  Future<void> addUserToDb(String value) async {
-    await fireBaseService.addUser(value);
-  }
 }

@@ -4,6 +4,8 @@ class Tracks{
   final String? trackArtist;
   final String? id;
   bool? isSelected=false;
+  bool isPlaying = false;
+
   Tracks({this.trackName, this.trackUrl, this.trackArtist,this.isSelected, this.id});
 
   factory Tracks.fromJson(Map<String, dynamic> json){
@@ -21,4 +23,12 @@ class Tracks{
   get getSelected{
     return isSelected;
   } 
+
+  get getIsPlaying {
+    return isPlaying;
+  }
+
+  setIsPlaying(bool isPlaying) {
+    this.isPlaying = isPlaying;
+  }
 }

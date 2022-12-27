@@ -3,6 +3,7 @@
    <application
         android:label="music_app"
         android:usesCleartextTraffic="true"
+        android:enableOnBackInvokedCallback="true"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
