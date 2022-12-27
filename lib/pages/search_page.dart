@@ -1,3 +1,8 @@
+
+
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_audio/just_audio.dart';
@@ -5,9 +10,9 @@ import 'package:music_app/blocs/tracks_bloc.dart';
 import 'package:music_app/firebase/firebase.dart';
 import 'package:music_app/models/tracks.dart';
 import 'package:music_app/pages/placement_page.dart';
-
+import 'package:file_picker/file_picker.dart';
 import '../blocs/tracks_states.dart';
-import '../models/api.dart';
+import '../models/file.dart';
 
 
 class SearchMusicView extends StatefulWidget {
@@ -18,7 +23,7 @@ class SearchMusicView extends StatefulWidget {
 }
 
 class _SearchMusicViewState extends State<SearchMusicView> {
-  Api api = Api();
+  FileStorage api = FileStorage();
   late TracksBloc _bloc;
   AudioPlayer player = AudioPlayer();
   List<Tracks> trackList=[];
@@ -42,6 +47,7 @@ class _SearchMusicViewState extends State<SearchMusicView> {
 
   @override
   Widget build(BuildContext context) {
+    getUrl();
     return BlocProvider<TracksBloc>.value(
       value: _bloc,
       child: Scaffold(
@@ -64,6 +70,7 @@ class _SearchMusicViewState extends State<SearchMusicView> {
                 return getListTracks(state);
                 }
                 else{
+                  player.pause();
                   return Container(
                     padding: const EdgeInsets.only(top: 50),
                     child: const Text("Search a song..."));
@@ -85,8 +92,10 @@ class _SearchMusicViewState extends State<SearchMusicView> {
             Container(
               padding: const  EdgeInsets.only(top: 20),
               child: ElevatedButton(
-                onPressed: ()=>
-                goToPlacementPage(context),
+                onPressed: (){
+                player.pause();
+                goToPlacementPage(context);
+                },
               child: const Text('Go to playlist')
               ),
             )
@@ -113,34 +122,39 @@ class _SearchMusicViewState extends State<SearchMusicView> {
               tileColor: state.tracks[index].getSelected ? Colors.blue : Colors.white,
               title: Text(state.tracks[index].trackName!),
               subtitle: Text(state.tracks[index].trackArtist!),
-              trailing: isPlaying ?  IconButton(
-                icon: const Icon(Icons.pause),
-                onPressed: (){
-                  setState(() {
-                    isPlaying = !isPlaying;
-                  });
-                player.pause();
-                },
-              ) :  IconButton(
-                icon: const Icon(Icons.play_arrow),
-                onPressed: (){
-                  setState(() {
-                    isPlaying = !isPlaying;
-                  });
+              trailing: state.tracks[index].getIsPlaying
+                    ? IconButton(
+                        icon: const Icon(Icons.pause),
+                        onPressed: () {
+                          setState(() {
+                            state.tracks[index].setIsPlaying(false);
+                          });
+                          player.pause();
+                        },
+                      )
+                    : IconButton(
+                        icon: const Icon(Icons.play_arrow),
+                        onPressed: () {
+                          setState(() {
+                            state.tracks[index].setIsPlaying(true);
+
+                            for (int i = 0; i < state.tracks.length; i++) {
+                              if (state.tracks[i] != state.tracks[index]) {
+                                state.tracks[i].setIsPlaying(false);
+                              }
+                            }
+                          });
                   playMusic(state, index);
                 }
               ),
               onTap: () => setState(() {
-<<<<<<< HEAD
                 setCurrentInfo(state, index);
-=======
-                state.tracks[index].setSelected(!state.tracks[index].isSelected!);
-                music = state.tracks[index].trackUrl!;
-                artist = state.tracks[index].trackArtist!;
-                name = state.tracks[index].trackName!;
-                id=state.tracks[index].id!;
-                isSelected = !isSelected;
->>>>>>> 92ba4ae0a5478f23e9f7448c8a21e78d8dfd0f97
+                isSelected = true;
+                      for (int i = 0; i < state.tracks.length; i++) {
+                        if (state.tracks[i] != state.tracks[index]) {
+                          state.tracks[i].setSelected(false);
+                        }
+                      }
               }
             )
             );
@@ -151,7 +165,7 @@ class _SearchMusicViewState extends State<SearchMusicView> {
   }
 
   void setCurrentInfo(TracksState state, int index) {
-    state.tracks[index].setLiked(!state.tracks[index].isLiked!);
+    state.tracks[index].setSelected(!state.tracks[index].isSelected!);
     music = state.tracks[index].trackUrl!;
     artist = state.tracks[index].trackArtist!;
     name = state.tracks[index].trackName!;
@@ -159,10 +173,15 @@ class _SearchMusicViewState extends State<SearchMusicView> {
     isSelected = !isSelected;
   }
 
-  void playMusic(TracksState state, int index) {
-    player.setAudioSource(AudioSource.uri(Uri.parse(state.tracks[index].trackUrl!)));
-    player.load();
-    player.setClip(start: const Duration(seconds: 60), end: const Duration(seconds: 70));
-    player.play();
+  Future<void> playMusic(TracksState state, int index) async {
+    try{
+    await player.setAudioSource(AudioSource.uri(Uri.parse(state.tracks[index].trackUrl!)));
+    await player.load();
+    await player.setClip(start: const Duration(seconds: 60), end: const Duration(seconds: 70));
+    await player.play();
+    }
+    catch(e){
+      print(e);
+    }
   }
 }
