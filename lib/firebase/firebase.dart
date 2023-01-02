@@ -58,4 +58,12 @@ class FireBaseService{
     .where('id', isEqualTo: id)
     .get().then((value) => value.docs.first.reference.update({'userLiked': FieldValue.arrayRemove([username])}));
   }
+
+  Future<String> getPseudo(String email) async {
+    return db.collection('user').where('email', isEqualTo: email).get().then((value) => value.docs.first.data()['pseudo']);
+  }
+
+  Future<bool> isCreated(String email) async {
+    return db.collection('user').where('email', isEqualTo: email).get().then((value) => value.docs.isNotEmpty);
+  }
 }
