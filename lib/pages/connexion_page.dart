@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_app/pages/search_page.dart';
-import '../firebase/firebase.dart'; 
+import '../firebase/firebase.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ConnexionPage extends StatefulWidget {
@@ -20,9 +20,11 @@ class _ConnexionPageState extends State<ConnexionPage> {
   late String userEmail;
   late String userPassword;
   late String userConfirmPassword;
+  late String userPseudo;
 
   @override
   Widget build(BuildContext context) {
+    fireBaseService.initializeDb();
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -71,81 +73,95 @@ class _ConnexionPageState extends State<ConnexionPage> {
             ),
           ),
           Container(
-            padding: const EdgeInsets.only(
-            left: 20, right: 20, bottom: 20),
-            child: isCreating ? TextField(
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Confirmate Password',
-              ),
-              onChanged: (value) => userConfirmPassword = value,
-            ):
-            const SizedBox(height: 0, width: 0),
+            child: isCreating
+                ? TextField(
+                    decoration: const InputDecoration(
+                      labelText: 'Pseudo',
+                    ),
+                    onChanged: (value) => userPseudo = value,
+                  )
+                : const SizedBox(height: 0, width: 0),
           ),
           Container(
-            padding: const EdgeInsets.only(bottom: 10), 
+            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+            child: isCreating
+                ? TextField(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Confirmate Password',
+                    ),
+                    onChanged: (value) => userConfirmPassword = value,
+                  )
+                : const SizedBox(height: 0, width: 0),
+          ),
+          Container(
+            padding: const EdgeInsets.only(bottom: 10),
             child: InkWell(
+                onTap: () {
+                  setState(() {
+                    isCreating = true;
+                    isLoggin = false;
+                  });
+                },
+                child: isCreating
+                    ? const SizedBox(height: 0, width: 0)
+                    : const Text(
+                        "Create an account",
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 15,
+                          decoration: TextDecoration.underline,
+                        ),
+                      )),
+          ),
+          InkWell(
               onTap: () {
                 setState(() {
-                  isCreating = true;
-                  isLoggin = false;
+                  isCreating = false;
+                  isLoggin = true;
                 });
               },
-              child: isCreating ? const SizedBox(height: 0, width: 0)
-               :const Text(
-                "Create an account",
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 15,
-                  decoration: TextDecoration.underline,
-                ),
-              )
-              ),
-          ),
-            InkWell(
-            onTap: () {
-              setState(() {
-                isCreating = false;
-                isLoggin = true;
-              });
-            },
-            child: isLoggin ? const SizedBox(height: 0, width: 0)
-             :const Text(
-              "Login",
-              style: TextStyle(
-                color: Colors.blue,
-                fontSize: 15,
-                decoration: TextDecoration.underline,
-              ),
-            )
-            ),
-            isCreating ? ElevatedButton(onPressed: createAccount, child: const Text("Create an account")) : 
-            ElevatedButton(onPressed: loginToFirebase, child: const Text("Login")),
+              child: isLoggin
+                  ? const SizedBox(height: 0, width: 0)
+                  : const Text(
+                      "Login",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 15,
+                        decoration: TextDecoration.underline,
+                      ),
+                    )),
+          isCreating
+              ? ElevatedButton(
+                  onPressed: createAccount,
+                  child: const Text("Create an account"))
+              : ElevatedButton(
+                  onPressed: loginToFirebase, child: const Text("Login")),
         ]),
       ),
     );
   }
 
   Future<void> loginToFirebase() async {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: userEmail, password: userPassword);
-      goToSearchView();
+    await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: userEmail, password: userPassword);
+    goToSearchView(userPseudo, userEmail);
   }
 
   Future<void> createAccount() async {
     if (userPassword == userConfirmPassword) {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: userEmail, password: userPassword);
-    }
-    else{
+      goToSearchView(userPseudo, userEmail);
+    } else {
       const snackBar = SnackBar(content: Text('Passwords are not the same'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
-  
-  void goToSearchView() {
-    Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const SearchMusicView("rt")));
+
+  void goToSearchView(String pseudo, String email) {
+    fireBaseService.addUser(pseudo, email);
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => SearchMusicView(userPseudo)));
   }
 }
