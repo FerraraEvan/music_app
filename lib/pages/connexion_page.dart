@@ -57,6 +57,18 @@ class _ConnexionPageState extends State<ConnexionPage> {
               ),
             ),
           ),
+          Container(
+            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+            child: isCreating
+                ? TextField(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Pseudo',
+                    ),
+                    onChanged: (value) => userPseudo = value,
+                  )
+                : const SizedBox(height: 0, width: 0),
+          ),
           SizedBox(
             height: 100,
             width: 500,
@@ -71,16 +83,6 @@ class _ConnexionPageState extends State<ConnexionPage> {
                 onChanged: (value) => userPassword = value,
               ),
             ),
-          ),
-          Container(
-            child: isCreating
-                ? TextField(
-                    decoration: const InputDecoration(
-                      labelText: 'Pseudo',
-                    ),
-                    onChanged: (value) => userPseudo = value,
-                  )
-                : const SizedBox(height: 0, width: 0),
           ),
           Container(
             padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
