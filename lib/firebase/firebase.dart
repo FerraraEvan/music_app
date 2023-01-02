@@ -29,6 +29,12 @@ class FireBaseService{
       'userLiked':[],
     });
   }
+    Future<void> addUser(String pseudo, String email){
+    return db.collection("user").add({
+      'pseudo': pseudo,
+      'email': email,
+    });
+  }
   Future<bool> isInDb(String name) async {
     return db.collection('user').where('name', isEqualTo: name).get().then((value) => value.docs.isNotEmpty);
   }
@@ -44,8 +50,8 @@ class FireBaseService{
     .where('id', isEqualTo: id)
     .get().then((value) => value.docs.first.reference.update({'userLiked': FieldValue.arrayUnion([username])}));
     }
-  
-  Future<void> removeLike(String name,String trackName,String id, String username) async {
+
+    Future<void> removeLike(String name,String trackName,String id, String username) async {
     return db.collection('track')
     .where('name', isEqualTo: name)
     .where('trackName', isEqualTo: trackName)
